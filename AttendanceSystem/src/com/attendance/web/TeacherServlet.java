@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,6 +50,13 @@ public class TeacherServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * 给某同学进行考勤记录
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void record(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Teacher teacher = (Teacher) request.getSession().getAttribute("teacher");
 		if(teacher==null) {
@@ -75,6 +84,13 @@ public class TeacherServlet extends HttpServlet {
 		response.sendRedirect(request.getContextPath()+"/TeacherServlet?method=query&date="+dateString);
 	}
 
+	/**
+	 * 查看某天的考勤表
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
 	private void query(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String dateString = request.getParameter("date");
 		if(dateString==null||dateString.trim().equals("")) {
@@ -97,6 +113,29 @@ public class TeacherServlet extends HttpServlet {
 			return;
 		}
 		List<Student> students = studentService.getStudentsByTeacher(teacher.getId(),date);
+		int zc = 0;
+		int cd = 0;
+		int zt = 0;
+		int kk = 0;
+		if(students!=null&&students.size()>0) {
+			for(Student s:students) {
+				if(s.getStatus()==0) {
+					zc++;
+				}else if(s.getStatus()==1) {
+					cd++;
+				}else if(s.getStatus()==2) {
+					zt++;
+				}else if(s.getStatus()==3) {
+					kk++;
+				}
+			}
+		}
+		Map<String,Integer> tj = new HashMap<>();
+		tj.put("zc", zc);
+		tj.put("cd", cd);
+		tj.put("zt", zt);
+		tj.put("kk", kk);
+		request.getSession().setAttribute("tj", tj);
 		request.getSession().setAttribute("students", students);
 		response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
 	}

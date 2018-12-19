@@ -166,7 +166,7 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public List<Student> getStudentsByTeacher(int teacherId,String date) {
 		List<Student> students = new ArrayList<>();
-		String sql = "select s.*,r.status from student s left join record r on s.teacherId=? and r.date=? and s.id=r.studentId";
+		String sql = "select s.*,r.status from student s left join record r on s.teacherId=? and r.date=? and s.id=r.studentId order by s.id";
 		Student student = null;
 		Connection conn = null;
 		PreparedStatement pst = null;

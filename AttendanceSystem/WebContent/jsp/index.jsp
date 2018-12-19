@@ -26,6 +26,7 @@ border-collapse: collapse;
 <title>教师页面</title>
 </head>
 <body>
+<h1>教师：${teacher.name }</h1>
 <form action="${pageContext.request.contextPath }/TeacherServlet?method=query" method="post">
 <input type="date" name="date" id="date" value="${date }"><input type="submit" value="查询">
 </form>
@@ -60,6 +61,21 @@ border-collapse: collapse;
 <td><a onclick="record('${s.id}')" href="javascript:void(0)">修改</a></td>
 </tr>
 </c:forEach>
+</table>
+统计：
+<table>
+<tr>
+<td style='background-color:green'>正常</td>
+<td style='background-color:yellow'>迟到</td>
+<td style='background-color:orange'>早退</td>
+<td style='background-color:red'>旷课</td>
+</tr>
+<tr>
+<td>${tj.zc }</td>
+<td>${tj.cd }</td>
+<td>${tj.zt }</td>
+<td>${tj.kk }</td>
+</tr>
 </table>
 </body>
 </html>
