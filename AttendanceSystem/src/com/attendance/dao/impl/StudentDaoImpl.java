@@ -164,9 +164,10 @@ public class StudentDaoImpl implements StudentDao {
 
 	
 	@Override
-	public List<Student> getStudentsByTeacher(int teacherId) {
+	public List<Student> getStudentsByTeacher(int teacherId,String date) {
 		List<Student> students = new ArrayList<>();
-		String sql = "select * from student where teacherId=?";
+//		String sql = "select s.*,r.status from student s left join record r on s.teacherId=? and r.date=? and s.id=r.studentId";
+		String sql = "select s.*,r.status from student s left join record r on s.teacherId=? and  s.id=r.studentId order by s.id";
 		Student student = null;
 		Connection conn = null;
 		PreparedStatement pst = null;
@@ -175,6 +176,7 @@ public class StudentDaoImpl implements StudentDao {
 		try {
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, teacherId);
+//			pst.setString(2, date);
 			rs = pst.executeQuery();
 			while(rs.next()) {
 				student = new Student();
@@ -184,6 +186,7 @@ public class StudentDaoImpl implements StudentDao {
 				student.setPassword(rs.getString("password"));
 				student.setTeacherId(rs.getInt("teacherId"));
 				student.setGender(rs.getString("gender"));
+				student.setStatus(rs.getInt("status"));
 				students.add(student);
 			}
 		} catch (SQLException e) {
@@ -214,4 +217,114 @@ public class StudentDaoImpl implements StudentDao {
 		return students;
 	}
 
+	@Override
+	public boolean isRecorded(int studentId, String date) {
+		String sql = "select * from record r where r.studentId=? and r.date=?";
+		Connection conn = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		conn = MyDatabaseUtil.getConnection();
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, studentId);
+			pst.setString(2, date);
+			rs = pst.executeQuery();
+			if(rs.next()) {
+				return true;
+			}else {
+				return false;
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(pst!=null) {
+				try {
+					pst.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(conn!=null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	
+	@Override
+	public void addRecord(int studentId, String date, int status) {
+		String sql = "insert into record(studentId,date,status) value(?,?,?)";
+		Connection conn = null;
+		PreparedStatement pst = null;
+		conn = MyDatabaseUtil.getConnection();
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, studentId);
+			pst.setString(2, date);
+			pst.setInt(3, status);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally{
+			if(pst!=null) {
+				try {
+					pst.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(conn!=null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+
+	@Override
+	public void updateRecord(int studentId, String date, int status) {
+		String sql = "update record set status=? where studentId=? and date=?";
+		Connection conn = null;
+		PreparedStatement pst = null;
+		conn = MyDatabaseUtil.getConnection();
+		try {
+			pst = conn.prepareStatement(sql);
+			pst.setInt(1, status);
+			pst.setInt(2, studentId);
+			pst.setString(3, date);
+			pst.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} finally{
+			if(pst!=null) {
+				try {
+					pst.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(conn!=null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 }

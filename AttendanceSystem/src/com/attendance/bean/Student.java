@@ -10,6 +10,21 @@ public class Student {
 	private String password;
 	private String gender;
 	private int teacherId;
+	/**
+	 * 状态<br/>
+	 * 0：正常；
+	 * 1：迟到；
+	 * 2：早退；
+	 * 3：旷课；
+	 */
+	private int status;
+	
+	public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
 	public int getId() {
 		return id;
 	}
@@ -49,7 +64,8 @@ public class Student {
 	@Override
 	public String toString() {
 		return "Student [id=" + id + ", name=" + name + ", number=" + number + ", password=" + password + ", gender="
-				+ gender + ", teacherId=" + teacherId + "]";
+				+ gender + ", teacherId=" + teacherId + ", status=" + status + "]";
 	}
+	
 	
 }

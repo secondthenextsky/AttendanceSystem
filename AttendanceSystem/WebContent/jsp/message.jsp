@@ -7,5 +7,7 @@
 </head>
 <body>
 <h1>${message }</h1>
+<a href="${pageContext.request.contextPath }/jsp/login_teacher.jsp">去登录</a>
+<a href="${pageContext.request.contextPath }/jsp/index.jsp">去首页</a>
 </body>
 </html>

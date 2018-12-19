@@ -34,4 +34,5 @@ public class TeacherServiceImpl implements TeacherService {
 		return teacherDao.getByNumberAndPassword(number,password);
 	}
 
+
 }
