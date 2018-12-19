@@ -166,8 +166,7 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public List<Student> getStudentsByTeacher(int teacherId,String date) {
 		List<Student> students = new ArrayList<>();
-//		String sql = "select s.*,r.status from student s left join record r on s.teacherId=? and r.date=? and s.id=r.studentId";
-		String sql = "select s.*,r.status from student s left join record r on s.teacherId=? and  s.id=r.studentId order by s.id";
+		String sql = "select s.*,r.status from student s left join record r on s.teacherId=? and r.date=? and s.id=r.studentId";
 		Student student = null;
 		Connection conn = null;
 		PreparedStatement pst = null;
@@ -176,7 +175,7 @@ public class StudentDaoImpl implements StudentDao {
 		try {
 			pst = conn.prepareStatement(sql);
 			pst.setInt(1, teacherId);
-//			pst.setString(2, date);
+			pst.setString(2, date);
 			rs = pst.executeQuery();
 			while(rs.next()) {
 				student = new Student();
