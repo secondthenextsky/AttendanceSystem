@@ -26,9 +26,9 @@ border-collapse: collapse;
 <title>教师页面</title>
 </head>
 <body>
-<h1>教师：${teacher.name }</h1>
+<h1>教师：${teacher.name }<a style="font-size:20px;" href="${pageContext.request.contextPath }/TeacherServlet?method=logout">退出</a></h1>
 <form action="${pageContext.request.contextPath }/TeacherServlet?method=query" method="post">
-<input type="date" name="date" id="date" value="${date }"><input type="submit" value="查询">
+<input type="date" name="date" id="date" value='${date }'><input type="submit" value="查询">
 </form>
 <table>
 <tr>

@@ -39,6 +39,9 @@ public class TeacherServlet extends HttpServlet {
 		case "login":
 			login(request,response);
 			break;
+		case "logout":
+			logout(request,response);
+			break;
 		case "query":
 			query(request,response);
 			break;
@@ -113,6 +116,12 @@ public class TeacherServlet extends HttpServlet {
 			return;
 		}
 		List<Student> students = studentService.getStudentsByTeacher(teacher.getId(),date);
+		tj(request, students);
+		request.getSession().setAttribute("students", students);
+		response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
+	}
+
+	private void tj(HttpServletRequest request, List<Student> students) {
 		int zc = 0;
 		int cd = 0;
 		int zt = 0;
@@ -136,8 +145,6 @@ public class TeacherServlet extends HttpServlet {
 		tj.put("zt", zt);
 		tj.put("kk", kk);
 		request.getSession().setAttribute("tj", tj);
-		request.getSession().setAttribute("students", students);
-		response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
 	}
 
 	/**
@@ -167,13 +174,28 @@ public class TeacherServlet extends HttpServlet {
 			return;
 		}
 		request.getSession().setAttribute("teacher", teacher);
+		request.getSession().setAttribute("date", new Date());
 		Date date = new Date();
 		List<Student> students = studentService.getStudentsByTeacher(teacher.getId(),date);
+		tj(request, students);
 		request.getSession().setAttribute("students", students);
 		response.sendRedirect(request.getContextPath()+"/jsp/index.jsp");
 		return;
 	}
 
+	 /*退出 
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws ServletException 
+	 */
+	private void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().removeAttribute("teacher");
+		response.sendRedirect(request.getContextPath()+"/jsp/login_teacher.jsp");
+		return;
+	}
+
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doGet(request, response);
 	}
